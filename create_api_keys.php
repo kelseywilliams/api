@@ -33,7 +33,7 @@
         }
 
         if($result){
-           /* ini_set( 'display_errors', 1 );
+            ini_set( 'display_errors', 1 );
             error_reporting( E_ALL );
             $from = "admin@kelseywilliams.net";
             $to = $client_email;
@@ -48,7 +48,7 @@
                 $_SESSION["error"] = "An error occured when trying to send the email to " . $client_email . ".  No email was sent and no key was issued.  Please try again or contact the website adminstrator.";
                 $mysqli->query("DELETE FROM api_keys WHERE api_key=\"$key\";");
                 exit();
-            }*/
+            }
             $_SESSION["success"] = "Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
         }
         else{
