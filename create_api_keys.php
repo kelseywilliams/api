@@ -31,6 +31,7 @@
         if($result){
             $result = $mysqli->query("INSERT INTO api_keys (api_key, valid, expiration, rate, last_op, email) VALUES (\"{$key}\", \"true\", \"{$expiration}\", \"{$rate}\", \"{$time}\", \"$client_email\");");
         }
+        echo $mysqli->error;
 
         if($result){
             ini_set( 'display_errors', 1 );
@@ -42,14 +43,11 @@
             $headers = "From:" . $from;
             if(mail($to,$subject,$message, $headers)) {
                 $_SESSION["success"] = "Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
-                exit();
             } 
             else {
                 $_SESSION["error"] = "An error occured when trying to send the email to " . $client_email . ".  No email was sent and no key was issued.  Please try again or contact the website adminstrator.";
                 $mysqli->query("DELETE FROM api_keys WHERE api_key=\"$key\";");
-                exit();
             }
-            $_SESSION["success"] = "Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
         }
         else{
             $_SESSION["error"] = "An error occurred when pushing your api key to the database.  No email was sent.  Please contact the website adminstrator.";
