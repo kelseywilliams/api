@@ -82,9 +82,9 @@
             // table api_keys with fields key, boolean revoked, expiration_date in seconds since unix epoch
             $mysqli = new mysqli($db_host, $db_username, $db_password, $db);
 
-            $response = $mysqli->query("SELECT * FROM api_keys WHERE key=\"{$key}\" AND valid=\"true\"");
+            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"{$key}\" AND valid=\"true\";");
             if($response->num_rows > 0){
-                $response->fetch_assoc();
+                $response = $response->fetch_assoc();
                 $time_to_live = $response["expiration"] - time();
                 if($time_to_live < 1){
                     $mysqli->set_charset("utf8mb4");
@@ -110,6 +110,11 @@
             $date = $_POST["date"];
             $flag = $_POST["flag"];
 
+            $pieces = explode(".", $key);
+
+            $prefix = $pieces[0];
+            $hash = $pieces[1];
+
             if(!API::authenticate_api_key($key, $this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB)){
                 http_response_code(400);
                 exit();
@@ -121,7 +126,7 @@
             $mysqli->set_charset("utf8mb4");
 
             // Prepare the sql statement and insert the data into the database
-            $stmt = $mysqli->prepare("INSERT INTO data (data, date, flag) VALUES (?, ?, ?)");
+            $stmt = $mysqli->prepare("INSERT INTO " . $hash . " (data, date, flag) VALUES (?, ?, ?)");
             $stmt->bind_param("sss", $data, $date, $flag);
             $stmt->execute();
             $stmt->close();
@@ -134,6 +139,12 @@
         function get(){
             $key = $_GET["key"];
 
+            // Why is php so damn dramatic?  We got die() and now explode().  Did Michael Bay direct this language?
+            $pieces = explode(".", $key);
+
+            $prefix = $pieces[0];
+            $hash = $pieces[1];
+
             if(!API::authenticate_api_key($key, $this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB)){
                 http_response_code(400);
                 exit();
@@ -141,9 +152,17 @@
 
             $mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB);
 
-            $response = $mysqli->("SELECT * FROM " . $key );
-            $arr = $response->fetch_assoc();
-            echo json_encode($arr);
+            $response = $mysqli->query("SELECT * FROM " . $hash );
+            echo $mysqli->error;
+            if($response->num_rows > 0){
+                $arr = $response->fetch_assoc();
+            }
+            else{
+                $arr = [];
+            }
+            echo json_encode($arr, JSON_FORCE_OBJECT);
+
+            http_response_code(200);
         }
     }
 
@@ -158,14 +177,10 @@
     $api = new API($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB);
 
     if($METHOD == "POST"){
-        $api.post();
+        $api->post();
     }
 
-    /*if($METHOD == "PUT"){
-
-    }*/
-
     if($METHOD == "GET"){
-        $api.get();
+        $api->get();
     }
 ?>
