@@ -141,7 +141,7 @@
 
             $mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB);
 
-            $response = $mysqli->("SELECT * FROM " . $key .);
+            $response = $mysqli->("SELECT * FROM " . $key );
             $arr = $response->fetch_assoc();
             echo json_encode($arr);
         }
