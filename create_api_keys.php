@@ -27,7 +27,7 @@
         $result = $mysqli->query("SELECT * FROM api_keys WHERE email=\"$client_email\" AND valid=\"true\";");
         if($result->num_rows > 0){
             $mysqli->close();
-            $_SESSION["error"] = "A key already exists for " . $client_email;
+            $_SESSION["error"] = "Error: A key already exists for " . $client_email;
             header("Location: /api/", 301);
             exit();
         }

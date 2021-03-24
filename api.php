@@ -1,32 +1,15 @@
 <?php
 
-    $config = include("config.php");
-    $DB_HOST = $config["host"];
-    $DB_USERNAME = $config["username"];
-    $DB_PASSWORD = $config["password"];
-    $DB = $config["db"];
 
-    $METHOD = $_SERVER["REQUEST_METHOD"];
 
-    if($METHOD == "POST"){
-
-    }
-
-    if($METHOD == "PUT"){
-
-    }
-
-    if($METHOD == "GET"){
-        authenticate($_GET["key"]);
-    }
-
-    if($METHOD == "PATCH"){
+    /*if($METHOD == "PATCH"){
 
     }
 
     if($METHOD == "DELETE"){
 
     }
+
     function authenticate($key){
         global $DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB;
         // table api_keys with fields key, boolean revoked, expiration_date in seconds since unix epoch
@@ -83,7 +66,7 @@
         $stmt->execute();
         $stmt->close();
     }
-    echo hash("sha256", uniqid());
+    echo hash("sha256", uniqid());*/
 
     class API{
 
@@ -148,17 +131,8 @@
         }
 
         // indempotent
-        /*function get(){
+        function get(){
             $key = $_GET["key"];
-            if(isset($_GET["data"])){
-                $data = $_GET["data"];
-            }
-            if(isset($_GET["date"])){
-                $date = $_GET["date"];
-            }
-            if(isset($_GET["flag"])){
-                $flag = $_GET["flag"];
-            }
 
             if(!API::authenticate_api_key($key, $this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB)){
                 http_response_code(400);
@@ -167,7 +141,31 @@
 
             $mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB);
 
-            if(isset($_GET))
-        }*/
+            $response = $mysqli->("SELECT * FROM " . $key .);
+            $arr = $response->fetch_assoc();
+            echo json_encode($arr);
+        }
+    }
+
+    $config = include("config.php");
+    $DB_HOST = $config["host"];
+    $DB_USERNAME = $config["username"];
+    $DB_PASSWORD = $config["password"];
+    $DB = $config["db"];
+
+    $METHOD = $_SERVER["REQUEST_METHOD"];
+
+    $api = new API($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB);
+
+    if($METHOD == "POST"){
+        $api.post();
+    }
+
+    /*if($METHOD == "PUT"){
+
+    }*/
+
+    if($METHOD == "GET"){
+        $api.get();
     }
 ?>
