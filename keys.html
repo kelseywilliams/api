@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>kelseywilliams.net API</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>kelseywilliams.net api</h1>
+        <form action="create_api_keys.php" method="POST">
+            <p>enter your email to recieve an api key.</p>
+            <input name="email" id="email" required pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$" placeholder="jsmith@example.com">
+            <button class="submit" type="submit" id="submit" class="submit">Send</button>
+        </form>
+    </body>
+    <script src="script.js"></script>
+</html>
