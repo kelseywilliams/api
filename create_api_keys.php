@@ -15,10 +15,16 @@
         $time = time();
         $rate = 5;
         $client_email = $_POST["email"];
+
+        if(!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", $client_email)){
+            $_SESSION["Error: Stop messing with my client side code."];
+            header("Location: /api/", 301);
+            exit();
+        }
         
         $mysqli = new mysqli($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB);
 
-        $result = $mysqli->query("SELECT * FROM api_keys WHERE email=\"$client_email\"");
+        $result = $mysqli->query("SELECT * FROM api_keys WHERE email=\"$client_email\" AND valid=\"true\";");
         if($result->num_rows > 0){
             $mysqli->close();
             $_SESSION["error"] = "A key already exists for " . $client_email;
@@ -38,19 +44,19 @@
             error_reporting( E_ALL );
             $from = "admin@kelseywilliams.net";
             $to = $client_email;
-            $subject = "API key";
-            $message = "Your api key is " . $key . "\nDo not lose this key as you are only allowed one until it expires.";
+            $subject = "kelseywilliams.net api key";
+            $message = "Your api key is: " . $key . "\nDo not lose this key as you are only allowed one key per email until it expires in 7 days.\nRead the documentation on the kelseywilliams.net api homepage for details on connecting to and using the api. ";
             $headers = "From:" . $from;
             if(mail($to,$subject,$message, $headers)) {
-                $_SESSION["success"] = "Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
+                $_SESSION["success"] = "Success: Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
             } 
             else {
-                $_SESSION["error"] = "An error occured when trying to send the email to " . $client_email . ".  No email was sent and no key was issued.  Please try again or contact the website adminstrator.";
+                $_SESSION["error"] = "Error: An error occured when trying to send the email to " . $client_email . ".  No email was sent and no key was issued.  Please try again or contact the website adminstrator.";
                 $mysqli->query("DELETE FROM api_keys WHERE api_key=\"$key\";");
             }
         }
         else{
-            $_SESSION["error"] = "An error occurred when pushing your api key to the database.  No email was sent.  Please contact the website adminstrator.";
+            $_SESSION["error"] = "Error: An error occurred when pushing your api key to the database.  No email was sent.  Please contact the website adminstrator.";
         }
         $mysqli->close();
         header("Location: /api/", 301);
