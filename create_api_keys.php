@@ -17,7 +17,7 @@
         $client_email = $_POST["email"];
 
         if(!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", $client_email)){
-            $_SESSION["Error: Stop messing with my client side code."];
+            $_SESSION["Error: Invalid email."];
             header("Location: /api/", 301);
             exit();
         }
