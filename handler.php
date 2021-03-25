@@ -170,7 +170,7 @@
             else{
                 $arr = array();
             }
-            echo json_encode($arr, JSON_FORCE_OBJECT);
+            echo json_encode($arr);
 
             http_response_code(200);
         }
