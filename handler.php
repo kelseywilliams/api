@@ -173,12 +173,6 @@
             echo json_encode($arr, JSON_FORCE_OBJECT);
 
             http_response_code(200);
-
-            if($result->num_rows > 0){
-                $base_array = array();
-                while($row = $result->fetch_assoc()){
-                    array_push($base_array, array("data"=>$row["data"], "time"=>$row["time"], "post_read"=>$row["post_read"]));
-                }
         }
     }
 
