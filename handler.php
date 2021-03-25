@@ -104,6 +104,7 @@
         }
 
         // non indempotent
+        // Returns response code 201 for created objects are 200 when not created
         function post(){
             $key = $_POST["key"];
             $data = $_POST["data"];
@@ -128,10 +129,15 @@
             // Prepare the sql statement and insert the data into the database
             $stmt = $mysqli->prepare("INSERT INTO " . $hash . " (data, date, flag) VALUES (?, ?, ?)");
             $stmt->bind_param("sss", $data, $date, $flag);
-            $stmt->execute();
+            $result = $stmt->execute();
             $stmt->close();
 
-            http_response_code(200);
+            if($result){
+                http_response_code(201);
+            }
+            else{
+                http_response_code(200);
+            }
             exit();
         }
 
