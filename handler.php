@@ -129,10 +129,11 @@
             // Prepare the sql statement and insert the data into the database
             $stmt = $mysqli->prepare("INSERT INTO " . $hash . " (data, date, flag) VALUES (?, ?, ?)");
             $stmt->bind_param("sss", $data, $date, $flag);
-            $result = $stmt->execute();
+            $stmt->execute();
+            $result = $stmt->affected_rows;
             $stmt->close();
 
-            if($result){
+            if($result > 0){
                 http_response_code(201);
             }
             else{
