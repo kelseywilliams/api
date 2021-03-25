@@ -106,11 +106,19 @@
         // non indempotent
         // Returns response code 201 for created objects are 200 when not created
         function post(){
+            // get response body
             $key = $_POST["key"];
             $data = $_POST["data"];
             $date = $_POST["date"];
             $flag = $_POST["flag"];
 
+            // If response body does not contain the elements data, date, and flag, return a status of 400 and exit
+            if(!isset($_POST["data"]) || !isset($_POST["date"]) || !isset($_POST["flag"])){
+                http_response_code(400);
+                exit();
+            }
+
+            // Break the api key into the prefix and hash as the database tables are named with the hash (no periods allowed in table names)
             $pieces = explode(".", $key);
 
             $prefix = $pieces[0];
@@ -134,9 +142,11 @@
             $stmt->close();
 
             if($result > 0){
+                // Created
                 http_response_code(201);
             }
             else{
+                // Ok
                 http_response_code(200);
             }
             exit();
@@ -144,9 +154,11 @@
 
         // indempotent
         function get(){
+            // Get the api key
             $key = $_GET["key"];
 
             // Why is php so damn dramatic?  We got die() and now explode().  Did Michael Bay direct this language?
+            // Break the api key into the prefix and hash as the database tables are named with the hash (no periods allowed in table names)
             $pieces = explode(".", $key);
 
             $prefix = $pieces[0];
@@ -159,8 +171,8 @@
 
             $mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB);
 
+            // Get all data from table and return as a json string
             $response = $mysqli->query("SELECT * FROM " . $hash );
-            echo $mysqli->error;
             if($response->num_rows > 0){
                 $arr = array();
                 while($row = $response->fetch_assoc()){
@@ -173,6 +185,74 @@
             echo json_encode($arr);
 
             http_response_code(200);
+        }
+        
+        //indempotent
+        function put(){
+            // get response body
+            $key = $_POST["key"];
+            $data = $_POST["data"];
+            $date = $_POST["date"];
+            $flag = $_POST["flag"];
+
+            // If response body does not contain the elements data, date, and flag, return a status of 400 and exit
+            if(!isset($_POST["data"]) || !isset($_POST["date"]) || !isset($_POST["flag"])){
+                http_response_code(400);
+                exit();
+            }
+
+            // Break the api key into the prefix and hash as the database tables are named with the hash (no periods allowed in table names)
+            $pieces = explode(".", $key);
+
+            $prefix = $pieces[0];
+            $hash = $pieces[1];
+
+            if(!API::authenticate_api_key($key, $this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB)){
+                http_response_code(400);
+                exit();
+            }
+
+            $mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB);
+
+
+            $mysqli->set_charset("utf8mb4");
+
+            // Prepare the sql statement and insert the data into the database
+            $response = $myslqi->query("SELECT * FROM " . $hash . " WHERE data=" . $data . ";");
+            if($response->num_rows > 0){
+                $stmt = $mysqli->prepare("UPDATE " . $hash . " SET date?, flag=? WHERE data=?;" );
+                $stmt->bind_param("sss", $date, $flag, $data);
+                $stmt->execute();
+                $result = $stmt->affected_rows;
+                $stmt->close();
+
+                if($result > 0){
+                    // Created
+                    http_response_code(201);
+                }
+                else{
+                    // Ok
+                    http_response_code(200);
+                }
+                exit();
+            }
+            else{
+                $stmt = $mysqli->prepare("INSERT INTO " . $hash . " (data, date, flag) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $data, $date, $flag);
+                $stmt->execute();
+                $result = $stmt->affected_rows;
+                $stmt->close();
+    
+                if($result > 0){
+                    // Created
+                    http_response_code(201);
+                }
+                else{
+                    // Ok
+                    http_response_code(200);
+                }
+                exit();
+            }
         }
     }
 
@@ -192,5 +272,9 @@
 
     if($METHOD == "GET"){
         $api->get();
+    }
+
+    if($METHOD == "PUT"){
+        $api->put();
     }
 ?>
