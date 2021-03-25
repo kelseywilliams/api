@@ -190,13 +190,13 @@
         //indempotent
         function put(){
             // get response body
-            $key = $_POST["key"];
-            $data = $_POST["data"];
-            $date = $_POST["date"];
-            $flag = $_POST["flag"];
+            $key = $_PUT["key"];
+            $data = $_PUT["data"];
+            $date = $_PUT["date"];
+            $flag = $_PUT["flag"];
 
             // If response body does not contain the elements data, date, and flag, return a status of 400 and exit
-            if(!isset($_POST["data"]) || !isset($_POST["date"]) || !isset($_POST["flag"])){
+            if(!isset($_PUT["data"]) || !isset($_PUT["date"]) || !isset($_PUT["flag"])){
                 http_response_code(400);
                 exit();
             }
