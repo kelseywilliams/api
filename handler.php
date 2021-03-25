@@ -189,17 +189,28 @@
         
         //indempotent
         function put(){
-            // get response body
-            $key = $_PUT["key"];
-            $data = $_PUT["data"];
-            $date = $_PUT["date"];
-            $flag = $_PUT["flag"];
-
-            // If response body does not contain the elements data, date, and flag, return a status of 400 and exit
-            if(!isset($_PUT["data"]) || !isset($_PUT["date"]) || !isset($_PUT["flag"])){
-                http_response_code(400);
-                exit();
+            // Had to create a put variable like $_POST because php doesn't just come with it built in? lame
+            function PUT($key){
+                $inputFileSrc = 'php://input';
+                $lines = file($inputFileSrc);
+            
+                foreach($lines as $i =>  $line){
+                    $search = 'Content-Disposition: form-data; name="'.$key.'"';
+                    if(strpos($line, $search) !== false){
+                        return trim($lines[$i+2]);
+                    }
+                    else{
+                        // If response body does not contain the elements data, date, and flag, return a status of 400 and exit
+                        http_response_code(400);
+                        exit();
+                    }
+                }
             }
+            // get response body
+            $key = PUT["key"];
+            $data = PUT["data"];
+            $date = PUT["date"];
+            $flag = PUT["flag"];
 
             // Break the api key into the prefix and hash as the database tables are named with the hash (no periods allowed in table names)
             $pieces = explode(".", $key);
