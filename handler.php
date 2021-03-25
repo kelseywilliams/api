@@ -162,14 +162,23 @@
             $response = $mysqli->query("SELECT * FROM " . $hash );
             echo $mysqli->error;
             if($response->num_rows > 0){
-                $arr = $response->fetch_assoc();
+                $arr = array();
+                while($row = $response->fetch_assoc()){
+                    array_push($arr, array("data"=>$row["data"], "date"=>$row["date"], "flag"=>$row["flag"]));
+                }
             }
             else{
-                $arr = [];
+                $arr = array();
             }
             echo json_encode($arr, JSON_FORCE_OBJECT);
 
             http_response_code(200);
+
+            if($result->num_rows > 0){
+                $base_array = array();
+                while($row = $result->fetch_assoc()){
+                    array_push($base_array, array("data"=>$row["data"], "time"=>$row["time"], "post_read"=>$row["post_read"]));
+                }
         }
     }
 
