@@ -31,7 +31,11 @@
                     return false;
                 }
                 else{
-                    $result = $mysqli->query("UPDATE api_keys SET last_op=" . $time . " WHERE key=\"{$key}\";");
+                    $stmt = $mysqli->prepare("UPDATE api_keys SET last_op=? WHERE key=?");
+                    $stmt->bind_param("ss", $time, $key);
+                    $stmt->execute();
+                    $result = $stmt->affected_rows;
+                    $stmt->close();
                     $mysqli->close();
                     echo $time_to_live . " " . $last_op . " " . $time . " " . $result . " ";
                     return true;
