@@ -26,7 +26,6 @@
                 }
                 if($time_to_live < 1){
                     $mysqli->set_charset("utf8mb4");
-
                     $mysqli->query("UPDATE api_keys SET valid=\"false\" WHERE key=" . $key .";");
                     $mysqli->close();
                     return false;
@@ -38,6 +37,7 @@
                 }
             }
             else{
+                echo "somethings broken";
                 return false;
             }
         }
