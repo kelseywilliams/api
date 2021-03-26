@@ -32,7 +32,7 @@
                     return false;
                 }
                 else{
-                    $mysqli->query("UPDATE api_keys SET last_op=" . $time() . " WHERE key=\"{$key}\"");
+                    $mysqli->query("UPDATE api_keys SET last_op=" . $time . " WHERE key=\"{$key}\"");
                     $mysqli->close();
                     return true;
                 }
