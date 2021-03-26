@@ -285,7 +285,7 @@
             // If no response body is included, delete everything from the database
             if(!isset($del_var["id"])){
                 $response->$mysqli->query("DELETE FROM " . $hash . ";");
-                http_response_code(204)
+                http_response_code(204);
                 exit();
             }
 
