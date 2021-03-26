@@ -13,7 +13,7 @@
             // table api_keys with fields key, boolean revoked, expiration_date in seconds since unix epoch
             $mysqli = new mysqli($db_host, $db_username, $db_password, $db);
 
-            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=" . $key . " AND valid=\"true\";");
+            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"{$key}\" AND valid=\"true\";");
             if($response->num_rows > 0){
                 $response = $response->fetch_assoc();
                 $time = strval(time());
@@ -37,7 +37,6 @@
                 }
             }
             else{
-                echo "somethings broken";
                 return false;
             }
         }
