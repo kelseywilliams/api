@@ -36,7 +36,7 @@
                     $stmt->execute();
                     $result = $stmt->affected_rows;
                     $stmt->close();
-                    $mysqli->close();
+                    //$mysqli->close();
                     echo $time_to_live . " " . $last_op . " " . $time . " " . $result . " ";
                     return true;
                 }
