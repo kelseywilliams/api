@@ -31,9 +31,9 @@
                     return false;
                 }
                 else{
-                    $mysqli->query("UPDATE api_keys SET last_op=\"{$time}\" WHERE key=\"{$key}\";");
+                    $result = $mysqli->query("UPDATE api_keys SET last_op=\"{$time}\" WHERE key=\"{$key}\";");
                     $mysqli->close();
-                    echo $time_to_live . " " . $last_op . " " . $time;
+                    echo $time_to_live . " " . $last_op . " " . $time . " " . $result . " ";
                     return true;
                 }
             }
