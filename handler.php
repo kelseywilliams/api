@@ -223,7 +223,7 @@
             $mysqli->set_charset("utf8mb4");
 
             // Prepare the sql statement and insert the data into the database
-            $response = $myslqi->query("SELECT * FROM " . $hash . " WHERE id=" . $id . ";");
+            $response = $myslqi->query("SELECT * FROM " . $hash . " WHERE id=\"" . $id . "\";");
             if($response->num_rows > 0){
                 $stmt = $mysqli->prepare("UPDATE " . $hash . " SET data=?, date=?, flag=? WHERE id=?;" );
                 $stmt->bind_param("ssss", $data, $date, $flag, $id);
