@@ -16,7 +16,14 @@
             $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"{$key}\" AND valid=\"true\";");
             if($response->num_rows > 0){
                 $response = $response->fetch_assoc();
+                $time = time();
                 $time_to_live = $response["expiration"] - time();
+                $last_op = $response["last_op"];
+                if($time - $last_op < 1){
+                    $mysqli->close();
+                    http_response_code(429);
+                    exit();
+                }
                 if($time_to_live < 1){
                     $mysqli->set_charset("utf8mb4");
 
@@ -25,6 +32,7 @@
                     return false;
                 }
                 else{
+                    $mysqli->query("UPDATE api_keys SET last_op=" . $time() . " WHERE key=\"{$key}\"");
                     $mysqli->close();
                     return true;
                 }
