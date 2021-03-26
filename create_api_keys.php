@@ -13,7 +13,7 @@
         $key = $prefix . "." . $hash;
         $expiration = time() + 604800;
         $time = time();
-        $rate = 5;
+        $rate = 1;
         $client_email = $_POST["email"];
 
         if(!preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/", $client_email)){
@@ -33,7 +33,7 @@
         }
 
         $mysqli->set_charset("utf8mb4");
-        $result = $mysqli->query("CREATE TABLE " . $hash . " (data TEXT(65535), date TEXT(255), flag TEXT(20));");
+        $result = $mysqli->query("CREATE TABLE " . $hash . " (data MEDIUMTEXT, date TINYTEXT, flag TINYTEXT, id MEDIUMTEXT);");
         if($result){
             $result = $mysqli->query("INSERT INTO api_keys (api_key, valid, expiration, rate, last_op, email) VALUES (\"{$key}\", \"true\", \"{$expiration}\", \"{$rate}\", \"{$time}\", \"$client_email\");");
         }
