@@ -262,14 +262,11 @@
 
         function delete(){
             // Had to create a put variable like $_POST because php doesn't just come with it built in? lame
-            parse_str(file_get_contents("php://input"), $put_var);
+            parse_str(file_get_contents("php://input"), $del_var);
 
             // get response body
-            $key = $put_var["key"];
-            $data = $put_var["data"];
-            $date = $put_var["date"];
-            $flag = $put_var["flag"];
-            $id = $put_var["id"];
+            $key = $del_var["key"];
+            $id = $del_var["id"];
 
             // Break the api key into the prefix and hash as the database tables are named with the hash (no periods allowed in table names)
             $pieces = explode(".", $key);
@@ -286,54 +283,20 @@
             $mysqli->set_charset("utf8mb4");
 
             // If no response body is included, delete everything from the database
-            if(!isset($put_var["data"]) && !isset($put_var["date"]) && !isset($put_var["flag"]) && !isset($put_var["id"])){
+            if(!isset($del_var["id"])){
                 $response->$mysqli->query("DELETE FROM " . $hash . ";");
                 http_response_code(204)
                 exit();
             }
 
-            // If the response body contains one of the elements data, date, flag, and id return a status of 400 and exit
-            if(!isset($put_var["data"]) || !isset($put_var["date"]) || !isset($put_var["flag"]) || !isset($put_var["id"])){
-                http_response_code(400);
-                exit();
-            }
-
-            // Prepare the sql statement and insert the data into the database
-            $response = $mysqli->query("SELECT * FROM " . $hash . " WHERE id=" . $id . ";");
-            if($response->num_rows > 0){
-                $stmt = $mysqli->prepare("UPDATE " . $hash . " SET data=?, date=?, flag=? WHERE id=?;" );
-                $stmt->bind_param("ssss", $data, $date, $flag, $id);
-                $stmt->execute();
-                $result = $stmt->affected_rows;
-                $stmt->close();
-
-                if($result > 0){
-                    // Created
-                    http_response_code(201);
-                }
-                else{
-                    // No Content
-                    http_response_code(204);
-                }
-                exit();
-            }
             else{
-                $stmt = $mysqli->prepare("INSERT INTO " . $hash . " (data, date, flag, id) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $data, $date, $flag, $id);
+                $stmt = $mysqli->prepare("DELETE FROM " . $hash . " WHERE id=?;" );
+                $stmt->bind_param("s",$id);
                 $stmt->execute();
-                $result = $stmt->affected_rows;
                 $stmt->close();
-    
-                if($result > 0){
-                    // Created
-                    http_response_code(201);
-                }
-                else{
-                    // No Content
-                    http_response_code(204);
-                }
-                exit();
+                http_response_code(204);
             }
+            exit();
         }
     }
 
