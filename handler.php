@@ -13,13 +13,13 @@
             // table api_keys with fields key, boolean revoked, expiration_date in seconds since unix epoch
             $mysqli = new mysqli($db_host, $db_username, $db_password, $db);
 
-            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"{$key}\" AND valid=\"true\";");
+            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=" . $key . " AND valid=\"true\";");
             if($response->num_rows > 0){
                 $response = $response->fetch_assoc();
-                $time = time();
-                $time_to_live = $response["expiration"] - time();
+                $time = strval(time());
+                $time_to_live = bcsub($response["expiration"], $time);
                 $last_op = $response["last_op"];
-                if($time - $last_op < 5){
+                if(bcsub($time, $last_op) < 5){
                     $mysqli->close();
                     http_response_code(429);
                     exit();
