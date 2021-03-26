@@ -19,7 +19,7 @@
                 $time = time();
                 $time_to_live = $response["expiration"] - time();
                 $last_op = $response["last_op"];
-                if($time - $last_op < 1){
+                if($time - $last_op < 5){
                     $mysqli->close();
                     http_response_code(429);
                     exit();
