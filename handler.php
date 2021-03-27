@@ -13,25 +13,23 @@
             // table api_keys with fields key, boolean revoked, expiration_date in seconds since unix epoch
             $mysqli = new mysqli($db_host, $db_username, $db_password, $db);
 
-            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"{$key}\" AND valid=\"true\";");
+            $response = $mysqli->query("SELECT * FROM api_keys WHERE api_key=\"" . $key . "\";");
             if($response->num_rows > 0){
                 $response = $response->fetch_assoc();
-                $time = strval(time());
-                $time_to_live = bcsub($response["expiration"], $time);
-                $last_op = $response["last_op"];
-                if(bcsub($time, $last_op) < 5){
+                $time = time();
+                $expiration = intval($response["expiration"]);
+                $last_op = intval($response["last_op"]);
+                $time_to_live = $expiration - time();
+                $last_request = $time - $last_op;
+
+                if($last_request < 1){
                     $mysqli->close();
                     http_response_code(429);
                     exit();
                 }
-                if($time_to_live < 1){
-                    $mysqli->set_charset("utf8mb4");
-                    $mysqli->query("UPDATE api_keys SET valid=\"false\" WHERE key=\"{$key}\";");
+                else if($time_to_live > 0){
+                    $mysqli->query("UPDATE api_keys SET last_op=" . $time . " WHERE api_key=\"" . $key . "\";");
                     $mysqli->close();
-                    return false;
-                }
-                else{
-                    $mysqli->query("UPDATE api_keys SET last_op=\"{$time}\" WHERE key=\"{$key}\";");
                     return true;
                 }
             }
