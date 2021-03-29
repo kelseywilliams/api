@@ -18,7 +18,7 @@
 
         if(!preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/", $client_email)){
             $_SESSION["error"] = "Error: Invalid email";
-            header("Location: /api/", 301);
+            header("Location: /", 301);
             exit();
         }
         
@@ -29,7 +29,7 @@
         if($result->num_rows > 0){
             $mysqli->close();
             $_SESSION["error"] = "Error: A key already exists for " . $client_email;
-            header("Location: /api/", 301);
+            header("Location: /", 301);
             exit();
         }
 
@@ -67,10 +67,10 @@
             $_SESSION["error"] = "Error: An error occurred when pushing your api key to the database.  No email was sent.  Please contact the website adminstrator.";
         }
         $mysqli->close();
-        header("Location: /api/", 301);
+        header("Location: /", 301);
     }
     else if($METHOD == "GET"){
-        header("Location: /api/", 301);
+        header("Location: /", 301);
         exit();
     }
 ?>
