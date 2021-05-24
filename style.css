@@ -33,6 +33,7 @@ code{
 }
 /*Shamless css stealing*/
 .submit {
+    margin:10px;
     background-color: orange;
     border-radius: 1px;
     cursor: pointer;
