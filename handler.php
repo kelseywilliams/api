@@ -19,7 +19,7 @@
                 $time = time();
                 $expiration = intval($response["expiration"]);
                 $last_op = intval($response["last_op"]);
-                $time_to_live = $expiration - time();
+                $time_to_live = $expiration - $time;
                 $last_request = $time - $last_op;
 
                 if($last_request < 1){
@@ -27,7 +27,7 @@
                     http_response_code(429);
                     exit();
                 }
-                else if($time_to_live > 0){
+                else if($time_to_live < 0){
                     $mysqli->query("UPDATE api_keys SET last_op=" . $time . " WHERE api_key=\"" . $key . "\";");
                     $mysqli->close();
                     return true;
