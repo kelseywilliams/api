@@ -45,7 +45,7 @@
                 $from = "admin@kelseywilliams.net";
                 $to = $client_email;
                 $subject = "api.kelseywilliams.net key";
-                $message = "Your api key is: " . $key . "\nDo not lose this key.  This key will expire in 7 days on " . date('l jS \of F Y h:i:s A') . ".  In order to prevent spam, only one key can be allocated for every email address.  If you would like to renew this key please send a request to admin@kelseywilliams.net.\nRead the documentation on the kelseywilliams.net api homepage for details on connecting to and using the api. ";
+                $message = "Your api key is: " . $key . "\nDo not lose this key.  This key will expire in 7 days.  In order to prevent spam, only one key can be allocated for every email address.  If you would like to renew this key please send a request to admin@kelseywilliams.net.\nRead the documentation on the kelseywilliams.net api homepage for details on connecting to and using the api. ";
                 $headers = "From:" . $from;
                 // If the email was sent successfuly
                 if(mail($to,$subject,$message, $headers)) {

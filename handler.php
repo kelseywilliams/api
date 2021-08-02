@@ -34,6 +34,7 @@
                     http_response_code(401);
                     exit();
                 }
+                return true;
             }
             else{
                 return false;
