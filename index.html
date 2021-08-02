@@ -21,7 +21,7 @@
             <p>kelseywilliams.net api is a lightweight api designed to transfer a small json string with fields data, date, a flag, and an id across the web with a simple request to <code>https://api.kelseywilliams.net/handler.php</code>.  this api is perfect for small projects that don't want to buy web hosting, but still want to get some data to another local network.  supports GET, POST, PUT, and DELETE.</p>
             <h2>how to use</h2>
             <h3>api key specifics</h3>
-            <p>all requests should be made to <code>https://api.kelseywilliams.net/handler.php</code><br><br>api key has a standard rate limit of 1 request every second.  exceeding this number of requests will result in a status code of 429 Too Many Requests.  if your key has expired, the api will return 401 Unauthorized.  an email address can only be used once to create a key.  if a key expires and you would like to create another key please send an email to kelseywilliams1200@gmail.com to request a new key.  this is in order to prevent potential spam.  as of right now, api keys are set to expire after 7 days allowing for a theoretical maximum of 604,800 requests.</p>
+            <p>all requests should be made to <code>https://api.kelseywilliams.net/handler.php</code><br><br>api key has a standard rate limit of 1 request every second.  exceeding this number of requests will result in a status code of 429 Too Many Requests.  if your key has expired, the api will return 401 Unauthorized.  an email address can only be used once to create a key.  if a key expires and you would like to create another key please send an email to admin@kelseywilliams.net to request a new key.  this is in order to prevent potential spam as this api is more of a proof of concept and not designed for rigorous use.  perhaps this will change in the future.  as of right now, api keys are set to expire after 7 days allowing for a theoretical maximum of 604,800 requests.</p>
             <h3>request: GET </h3>
             <p>request must contain a field titled "key" with a value of the client's api key.<br><br>returns JSON string and response code 200 Ok or a response code of 400 Bad Request if the api key used is invalid or a response code of 401 Unauthorized if the api key is expired.<br><br>example: <code>https://api.kelseywilliams.net/handler.php?key=some_api_key</code></p>
             <h3>request: POST</h3>
@@ -31,6 +31,9 @@
             <h3>request: DELETE</h3>
             <p>request must contain a message body with the field "key" with the value of the client's api key and an optional field of "id" with the value of a resource's id.  if no id is provided, <b>all rows on the table will be deleted.</b>  otherwise, only the resource whose id matches that specified in the request body will be deleted.<br><br>returns a response code of 204 No Content or a response code of 400 Bad Request if the api key used is invalid or a response code of 401 Unauthorized if the api key is expired.<br><br>example in python's requests library: <code>requests.delete("https://api.kelseywilliams.net/handler.php", data = {"key" : "some_api_key", "id" : "1234"})</code></p>
         </div>
+        <footer>
+            <p>Updated 8.22.2021</p>
+        </footer>
     </body>
     <script src="script.js"></script>
 </html>

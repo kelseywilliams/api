@@ -8,6 +8,11 @@ code{
 .docs{
     word-wrap: break-word;
 }
+footer{
+    padding-bottom: 10px;
+    background-color: deepskyblue;
+    padding-top: 2px;
+}
 /*Shamless css stealing*/
 .submit {
     margin:10px;
