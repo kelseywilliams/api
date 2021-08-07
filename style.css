@@ -34,3 +34,35 @@ footer{
     position:relative;
     top:1px;
 }
+.home {
+    margin:10px;
+    background-color: skyblue;
+    border-radius: 1px;
+    cursor: pointer;
+    color: black;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 3px 20px;
+    text-decoration: none;
+    vertical-align:bottom;
+    border:none;
+}
+.home:hover {
+    background-color:steelblue;
+}
+.home:active {
+    position:relative;
+    top:1px;
+}
+/* Create top border */
+.top-border {
+    /* Stolen from the web.  Cool gradients */
+    height:55px;
+    background-color: deepskyblue;
+}
+.top-border h1{
+    border-bottom:0;
+    margin:0;
+    padding-top:10px;
+    padding-left:10px;
+}

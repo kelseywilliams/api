@@ -199,7 +199,6 @@
         }
 
         function delete(){
-            // Had to create a put variable like $_POST because php doesn't just come with it built in? lame
             parse_str(file_get_contents("php://input"), $del_var);
 
             // get response body
