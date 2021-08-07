@@ -247,19 +247,23 @@
 
     $api = new API($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB);
 
-    if($METHOD == "POST"){
-        $api->post();
-    }
-
-    if($METHOD == "GET"){
-        $api->get();
-    }
-
-    if($METHOD == "PUT"){
-        $api->put();
-    }
-
-    if($METHOD == "DELETE"){
-        $api->delete();
+    switch($METHOD){
+        case "GET":
+            $api->get();
+            break;
+        case "POST":
+            $api->post();
+            break;
+        case "PUT":
+            $api->put();
+            break;
+        case "DELETE":
+            $api->delete();
+            break;
+        default:
+            #Method not accepted.  Return Response code 405 and Allow Header.  Section 7.4.1 of [RFC7231]
+            http_response_code(405);
+            header("Allow: GET, POST, PUT, DELETE");
+            break;
     }
 ?>
